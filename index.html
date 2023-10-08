@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="icon.png" >
+    <title>今天吃点啥呀</title>
+</head>
+<body>
+    <div id="app" >
+        <div id="content">
+            <label id="title">今天吃什么</label>
+            <div id="show">
+                <span id="myName"></span>
+            </div>
+            <button id="my_button" click="my_click">点菜</button>
+        </div>
+    </div>
+    <label id="menu" style="display: none;">
+        香鸭面 快餐(1) 麻辣香锅 烤盘饭 麻辣烫 拌面 快餐(2) 馄饨 铁板饭 冒菜 外卖 亚咪咕 泡面 水果 凉皮 水饺 螺蛳粉 零食
+    </label>
+</body>
+</html>
+
+
+<script>
+    function randomColor() {
+        var color = "#";
+        for (var i = 0; i < 6; i++) {
+            color += parseInt(Math.random() * 16).toString(16);
+        }
+        return color;
+    }
+ 
+    var intervalID = setInterval(createName, 400);
+
+    function createName(){
+        var parent = document.getElementById("app");
+        var childs = document.getElementsByClassName("name");
+        for(var i = 0; i< childs.length; i++){
+            if(getComputedStyle(childs[i], null)['opacity'] == 0){
+                parent.removeChild(childs[i]);
+            }
+        }
+        var pObj = document.createElement("span");
+        pObj.innerText = getName();
+        pObj.className = "name"
+        pObj.style.left = Math.random()*100+"%"
+        pObj.style.top = Math.random()*100+"%"
+        pObj.style.color = randomColor()
+        parent.appendChild(pObj);
+    }
+    
+    function getName(){
+        var text = document.getElementById("menu").innerText.trim();
+        var menu = text.split(/\s+/).filter(item => !/\s/.test(item));
+        return menu[Math.floor(Math.random() * menu.length)];;
+    }
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    document.getElementById("my_button").onclick = async function () {
+        for(var i = 0; i< 50;i++){
+            var time = 80 + i* 2;
+            if(i > 45) time = time + 300;
+            await sleep(time);
+            document.getElementById("myName").innerText=getName();
+        }
+        
+    };
+</script>
+
+<style>
+    *{
+        padding: 0;
+        margin: 0;
+        user-select:none;
+    }
+    body{
+        height: 100pt;
+        width: 100pt;
+    }
+
+    #app{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color:aliceblue;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    #content{
+        height: 100;
+         /* background-color: aquamarine; */
+        padding: 20px;
+        display: flex;
+        flex-direction:column;
+        z-index: 99;
+        
+    }
+    #title{
+        font-size: 30px;
+        color: darkgray;
+        text-align: center;
+        width: 200px;
+    }
+    #show{
+        height: 80px;
+        color: red;
+        padding: 20;
+        font-size: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    #my_button{
+        background-color:bisque;
+        color:darkslategray;
+        border-radius: 8px;
+        border: 0;
+        font-size: 24px;
+        height: 40px;
+        transition: background-color 500ms ease-in-out;
+    }
+    #my_button:hover{
+        background-color:aqua;
+    }
+
+    .name{
+        position: absolute;
+        font-size: 40px;
+        opacity: 0;
+        animation-name: nameshow;
+        animation-duration: 4s;
+        animation-iteration-count: 1;
+        animation-timing-function: ease-in-out;
+    }
+
+    @keyframes nameshow {
+        from {
+            opacity: 100;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+</style>
